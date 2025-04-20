@@ -1,8 +1,6 @@
 from typing import Final
 
 class HTTPHeaders:
-    """HTTP 헤더를 정의하고 관리하는 클래스입니다."""
-    
     # 공통 HTTP 헤더 상수
     ACCEPT: Final[str] = "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7"
     ACCEPT_ENCODING: Final[str] = "gzip, deflate, br, zstd"
@@ -26,13 +24,6 @@ class HTTPHeaders:
 
     @staticmethod
     def get_search_headers(search_type:str) -> dict[str, str]:
-        """
-        주어진 검색 유형에 따라 적절한 HTTP 헤더를 반환합니다.
-
-        :param search_type: 검색 유형 ('cpu', 'gpu', 'ai')
-        :return: 검색에 사용할 헤더 (딕셔너리 형식)
-        :raises ValueError: 잘못된 검색 유형이 주어졌을 경우
-        """
         
         # 공통 헤더 생성
         common_headers = {
@@ -65,29 +56,14 @@ class HTTPHeaders:
 
     @staticmethod
     def update_referer(new_referer: str) -> None:
-        """
-        Referer 헤더를 업데이트합니다.
-
-        :param new_referer: 새 Referer 값
-        """
         HTTPHeaders.REFERER = new_referer
 
     @staticmethod
     def update_cookie(new_cookie: str) -> None:
-        """
-        Cookie 헤더를 업데이트합니다.
-
-        :param new_cookie: 새 Cookie 값
-        """
         HTTPHeaders.COOKIE = new_cookie
 
     @staticmethod
     def update_if_none_match(new_if_none_match: str) -> None:
-        """
-        If-None-Match 헤더를 업데이트합니다.
-
-        :param new_if_none_match: 새 If-None-Match 값
-        """
         HTTPHeaders.IF_NONE_MATCH = new_if_none_match
 
 if __name__ == "__main__":

@@ -4,17 +4,10 @@ from pprint import pprint
 
 class GeekBenchJSONParser:
     def __init__(self):
-        """초기화 메서드입니다."""
         self.geekbench_data = dict() # GeekBench 데이터를 저장할 딕셔너리
 
     @staticmethod
     def save_data_to_json(file_path: str, data: dict):
-        """
-        주어진 데이터를 JSON (dict) 파일로 저장하는 함수.
-
-        :param file_path: 저장할 JSON 파일의 경로
-        :param data: 저장할 데이터 (딕셔너리 형식)
-        """
         # 디렉토리가 존재하지 않으면 생성
         os.makedirs(os.path.dirname(file_path), exist_ok=True)
 
@@ -23,16 +16,6 @@ class GeekBenchJSONParser:
 
     @staticmethod
     def load_data_to_json(file_path: str) -> dict:
-        """
-        지정된 파일 경로에서 JSON (dict) 데이터를 로드합니다.
-
-        :param file_path: str - 로드할 JSON 파일의 경로
-        :return: dict - 파일에서 로드한 JSON 데이터, 파일이 존재하지 않으면 빈 딕셔너리 반환
-        
-        이 함수는 주어진 파일 경로에서 JSON 형식의 데이터를 읽어들여
-        딕셔너리로 변환하여 반환합니다. 파일이 존재하지 않을 경우,
-        빈 딕셔너리를 반환합니다.
-        """
         if os.path.exists(file_path):
             with open(file_path, 'r', encoding='utf-8') as json_file:
                 return json.load(json_file)
@@ -40,13 +23,6 @@ class GeekBenchJSONParser:
 
 
     def store_geekbench_data(self, query: str, page_number: int, parsed_data: dict):
-        """
-        주어진 query와 페이지 번호에 대한 GeekBench 데이터를 딕셔너리에 저장합니다.
-
-        :param query: 기기 ID (예: 'SM-S928N')
-        :param page_number: 페이지 번호 (정수)
-        :param parsed_data: 저장할 데이터 (딕셔너리 형식)
-        """
         # query에 대한 데이터 구조 생성
         if query not in self.geekbench_data:
             self.geekbench_data[query] = dict()
@@ -64,14 +40,6 @@ class GeekBenchJSONParser:
                 
 
     def fetch_geekbench_data(self) -> dict:
-        """
-        저장된 딕셔너리에서 URL의 고유 번호 기준으로 내림차순 정렬한 후, 페이지네이션 처리하여 반환합니다.
-
-        :return: dict - 정렬된 페이지네이션 처리된 GeekBench 데이터
-        
-        이 함수는 저장된 GeekBench 딕셔너리 데이터를 가져와,
-        URL의 고유 번호 기준으로 내림차순 정렬한 후, 페이지네이션을 적용합니다.
-        """
         return self._sort_and_paginate_urls_by_unique_id_descending(data=self.geekbench_data)
     
     
@@ -81,16 +49,6 @@ class GeekBenchJSONParser:
 
 
     def _sort_and_paginate_urls_by_unique_id_descending(self, data: dict = None) -> dict:
-        """
-        주어진 딕셔너리에서 URL의 고유 번호 기준으로 내림차순 정렬한 후, 페이지네이션 처리합니다.
-
-        :param data: dict - URL과 관련된 데이터를 포함하는 딕셔너리
-        :return: dict - 페이지네이션 처리된 정렬된 데이터
-        
-        이 함수는 긱벤치 데이터의 정렬 오류, 버그, 데이터 중복 등을 방지하기 위해
-        URL의 고유 번호를 기준으로 내림차순으로 재정렬 및 페이지네이션 처리합니다.
-        """
-        
         merge_data = dict()
         self._add_source_data_to_merge(merge_data=merge_data, source_data=data)
         # 수정 후, merge_data는 이제 수정된 딕셔너리입니다.
@@ -100,14 +58,6 @@ class GeekBenchJSONParser:
 
 
     def merge_geekbench_data(self, new_data_path: dict | str = None, old_data_path: dict | str = None):
-        """
-        기존 데이터와 새로운 데이터를 합쳐서 페이지 구조로 저장된 딕셔너리를 반환합니다.
-        25개의 항목마다 페이지 번호를 증가시킵니다.
-        딕셔너리 특성상 데이터의 중복을 제거합니다.
-
-        :param new_data_path: 새로운 데이터 (딕셔너리 형식 또는 파일 경로)
-        :param old_data_path: 기존 데이터 (딕셔너리 형식 또는 파일 경로)
-        """
         # 새로운 데이터 로드
         if isinstance(new_data_path, dict):
             new_data = new_data_path
@@ -134,14 +84,6 @@ class GeekBenchJSONParser:
         return paginated_data
     
     def _load_merge_data(self, new_data: dict, old_data: dict) -> dict:
-        """
-        새로운 데이터와 기존 데이터를 로드하여 합칩니다.
-
-        :param new_data: dict - 새로운 데이터 (쿼리를 키로 하고 결과를 값으로 가지는 딕셔너리)
-        :param old_data: dict - 기존 데이터 (쿼리를 키로 하고 결과를 값으로 가지는 딕셔너리)
-        :return: dict - 합쳐진 데이터
-        """
-        
         merge_data = dict()
 
         # 새로운 데이터와 기존 데이터를 합치는 함수 호출
@@ -151,13 +93,6 @@ class GeekBenchJSONParser:
         return merge_data
 
     def _add_source_data_to_merge(self, merge_data: dict, source_data: dict):
-        """
-        주어진 소스 데이터를 합쳐진 데이터에 추가합니다.
-
-        :param merge_data: dict - 합쳐진 데이터 (쿼리를 키로 가지는 딕셔너리)
-        :param source_data: dict - 추가할 데이터 (쿼리를 키로 가지는 딕셔너리)
-        """
-        
         for query, query_data in source_data.items():
             if query not in merge_data:
                 merge_data[query] = dict()
@@ -168,13 +103,6 @@ class GeekBenchJSONParser:
 
 
     def _sort_urls_by_unique_id(self, merge_data: dict = None) -> dict:
-        """
-        주어진 딕셔너리에서 URL의 고유 번호 기준으로 내림차순으로 정렬합니다.
-
-        :param merge_data: dict - 쿼리를 키로 하고 URL과 결과를 값으로 가지는 딕셔너리
-        :return: dict - URL이 고유 번호 기준으로 내림차순으로 정렬된 딕셔너리      
-        """
-        
         # 각 쿼리에 대해 URL의 고유 번호 기준으로 내림차순 정렬
         for query in merge_data.keys():
             merge_data[query] = dict(sorted(
@@ -186,12 +114,6 @@ class GeekBenchJSONParser:
         return merge_data
 
     def _paginate_data(self, data: dict) -> dict:
-        """
-        데이터를 페이지 구조로 변환합니다.
-
-        :param data: 합쳐진 데이터
-        :return: 페이지 구조로 변환된 데이터
-        """
         paginated_data = dict()
         page_number = 0
         item_count = 0  # 항목 카운트 초기화
@@ -219,14 +141,6 @@ class GeekBenchJSONParser:
 
 
     def cpu_fix(self, file_path: str, save_file_path: str, cpu_model_mapping: dict):
-        """
-        CPU 모델 이름을 수정하고 수정된 데이터를 새로운 JSON 파일로 저장합니다.
-
-        Parameters:
-        :file_path (str): 수정할 JSON 파일의 경로
-        :save_file_path (str): 수정된 데이터를 저장할 JSON 파일의 경로
-        :cpu_model_mapping (dict): 수정할 CPU 모델 이름과 수정된 모델 이름의 매핑
-        """
         # 데이터 로드
         query_results = GeekBenchJSONParser.load_data_to_json(file_path)
 
@@ -254,15 +168,6 @@ class GeekBenchJSONParser:
 
 
     def calculate_total_pages(self, file_path: str):
-        """
-        주어진 JSON 파일에서 페이지 수를 계산합니다.
-
-        Parameters:
-        file_path (str): JSON 파일의 경로
-
-        Returns:
-        int: 총 페이지 수
-        """
         # 데이터 로드
         query_results = GeekBenchJSONParser.load_data_to_json(file_path=file_path)
 

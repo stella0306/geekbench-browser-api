@@ -24,22 +24,6 @@ async def new_geekbench_data(
     max_delay:int=2,
     ):
 
-    """
-    주어진 쿼리 데이터에 대해 GeekBench API를 통해 데이터를 비동기적으로 요청합니다.
-    기본적으로 이 함수는 query_data를 순회하여 각 쿼리를 개별적으로 처리합니다.
-
-    새로운 데이터는 지정된 시작 페이지부터 마지막 페이지까지 수집되며,
-    페이지 수에 따라 요청에 소요되는 시간이 달라질 수 있습니다.
-
-    :param search_type: 검색할 데이터 유형 (예: 'cpu', 'gpu' 등)
-    :param query_data: 검색할 쿼리 데이터 문자열 리스트
-    :param start_page: 데이터 수집 시작 페이지 번호 (기본값: 1)
-    :param last_page: 데이터 수집의 마지막 페이지 번호 (기본값: 99999). 실제 요청에 사용되는 값이며, 기본값 유지가 권장됩니다.        
-    :param default_pages: 기본 페이지 수 (전체 페이지 수를 요청할 때 사용)
-    :param min_delay: 요청 간 최소 지연 시간 (초) (기본값: 0)
-    :param max_delay: 요청 간 최대 지연 시간 (초) (기본값: 2)
-    :return: 없음
-    """
 
     avg_delay = list() # 지연 시간 저장 리스트
     request_mode = "new mode" # 요청 모드
@@ -102,20 +86,6 @@ async def new_geekbench_data_concurrently(
     max_delay:int=2,
     ):
 
-    """
-    주어진 쿼리 리스트에 대해 데이터를 비동기적으로 수집합니다.
-    asyncio.gather를 사용하여 여러 쿼리를 동시적으로 처리합니다.
-    
-    최대 세션 유지는 4개까지이며, 이는 query_data (list)의 개수를 의미합니다.
-
-    :param search_type: 검색할 데이터 유형 (예: 'cpu', 'gpu' 등)
-    :param queries: 검색할 쿼리 문자열 리스트의 리스트
-    :param start_page: 데이터 수집 시작 페이지 번호
-    :param last_page: 데이터 수집 마지막 페이지 번호 (실제 데이터 수집 작업에 사용되는 값)
-    :param default_pages: 자동으로 가져와진 페이지 수가 0또는 오류난 경우 사용할 기본 페이지 수 (총 페이지 값 표시용)
-    :param min_delay: 요청 간 최소 지연 시간 (초)
-    :param max_delay: 요청 간 최대 지연 시간 (초)
-    """
 
     if len(query_data) > 5:
         raise ValueError("비동기 최대 요청은 4개까지 가능합니다.")
@@ -145,27 +115,6 @@ async def merge_geekbench_data(
     max_delay:int=3,
     add_pages:int=5
     ):
-
-    """
-    주어진 쿼리 데이터에 대해 GeekBench API를 통해 데이터를 비동기적으로 요청하고,
-    기존 데이터에 새로운 데이터를 병합합니다.
-
-    이 함수는 query_data를 순회하여 각 쿼리를 개별적으로 처리합니다.
-    새로운 데이터가 업로드되면 기존 데이터를 재활용하여 수집 시간을 단축합니다.
-    이를 통해 HTTP 요청을 최소화하고, 수집 시간 및 비용을 절감할 수 있습니다.
-
-    새로운 데이터는 지정된 시작 페이지부터 마지막 페이지까지 수집되며,
-    페이지 수에 따라 소요되는 시간이 달라질 수 있습니다.
-
-    :param search_type: 검색할 데이터 유형 (예: 'cpu', 'gpu' 등)
-    :param query_data: 검색할 쿼리 데이터 문자열 리스트 (기본값: None)
-    :param start_page: 데이터 수집 시작 페이지 번호 (기본값: 1)
-    :param default_pages: 자동으로 가져와진 페이지 수가 0또는 오류난 경우 사용할 기본 페이지 수
-    :param min_delay: 요청 간 최소 지연 시간 (초) (기본값: 0.5)
-    :param max_delay: 요청 간 최대 지연 시간 (초) (기본값: 3)
-    :param add_pages: 추가 페이지 (페이지 값 보정에 사용되는 매개변수) (기본값: 5, 최소 기본값 또는 이상 값으로 권장)
-    :return: 없음
-    """
 
     avg_delay = list() # 지연 시간 저장 리스트
     request_mode = "merge mode" # 요청 모드
@@ -241,34 +190,6 @@ async def _fetch_and_log_geekbench_data(
     max_delay: float,
     avg_delay: float
     ) -> None:
-
-    """
-    주어진 쿼리와 검색 유형에 따라 GeekBench API에서 데이터를 비동기적으로 요청하고,
-    수집된 데이터를 파싱하여 저장한 후, 검색 로그를 출력합니다.
-
-    이 함수는 다음과 같은 정보를 로그로 기록합니다:
-    - 시작 시간
-    - query
-    - 페이지
-    - 랜덤 대기 시간
-    - 경과 시간
-    - 예상 남은 시간
-    - 예상 완료 시간
-    - ...
-    - ...
-
-    :param request_mode: 요청 모드
-    :param api_requester: 비동기 HTTP 통신을 해서 웹-데이터를 가져옵니다.
-    :param json_parser: json 포맷으로 수집한 데이터 정렬, 저장, 병합을 처리합니다.
-    :param query: 검색할 쿼리 문자열
-    :param search_type: 검색할 데이터 유형 (예: 'cpu', 'gpu' 등)
-    :param start_page: 데이터 수집 시작 페이지 번호
-    :param last_page: 데이터 수집 마지막 페이지 번호
-    :param total_pages: 총 페이지 수
-    :param min_delay: 요청 간 최소 지연 시간 (초)
-    :param max_delay: 요청 간 최대 지연 시간 (초)
-    :param avg_delay: 요청 간 지연 시간 저장 리스트 (초)
-    """
 
     start_time = get_current_time()  # 시작 시간 기록
             

@@ -9,23 +9,8 @@ except ImportError:
 
 
 class GeekBenchSearchParser:
-    """
-    GeekBench 검색 응답을 파싱하는 클래스입니다.
-
-    이 클래스는 GeekBench 검색으로부터 받은 HTML 응답을 처리하고,
-    CPU, GPU 및 AI 벤치마크 정보를 추출하여 필요한 데이터 형식으로 변환하는 기능을 제공합니다.
-    """    
-    
     @staticmethod
     def parse_search_benchmark(benchmark_type: str, content: str):
-        """
-        주어진 HTML 내용을 사용하여 CPU, GPU 또는 AI 벤치마크 정보를 파싱하는 제너레이터 함수입니다.
-
-        :param benchmark_type: 'cpu', 'gpu' 또는 'ai' 벤치마크 종류 지정
-        :param content: 벤치마크 정보가 포함된 HTML 문자열
-        :yield: 각 벤치마크 결과에 대한 정보
-        """
-
         # BeautifulSoup을 사용하여 HTML 파싱
         soup = BeautifulSoup(markup=content, features="lxml")
 
@@ -38,7 +23,6 @@ class GeekBenchSearchParser:
 
     @staticmethod
     def _get_benchmark_results(soup, benchmark_type: str):
-        """벤치마크 결과를 선택하는 헬퍼 함수"""
         # 벤치마크 결과 선택
         if benchmark_type in ["cpu", "gpu"]:
             return soup.select(selector="#wrap > div > div > div > div:nth-child(3) > div.col-12.col-lg-9 > div:nth-child(2) > div")
@@ -53,7 +37,6 @@ class GeekBenchSearchParser:
 
     @staticmethod
     def _extract_benchmark_data(result, benchmark_type: str):
-        """각 벤치마크 결과에서 필요한 데이터를 추출하는 헬퍼 함수"""
         if benchmark_type in ["cpu", "gpu"]:
             return GeekBenchSearchParser._extract_cpu_gpu_data(result, benchmark_type)
         elif benchmark_type == "ai":
@@ -105,8 +88,6 @@ class GeekBenchSearchParser:
 
     @staticmethod
     def _extract_ai_data(result):
-        """AI 데이터를 추출하는 헬퍼 함수"""
-        
         device_name_and_cpu_model = result.select_one(selector="#wrap > div > div > div > div:nth-child(3) > div.col-12.col-lg-9 > div.banff > div > div > table > tbody > tr > td.device > a").get_text(strip=False)
         device_name, cpu_model = separate_device_and_cpu(device_name_and_cpu_model)
         framework_name = result.select_one(selector="#wrap > div > div > div > div:nth-child(3) > div.col-12.col-lg-9 > div.banff > div > div > table > tbody > tr > td.framework").get_text(strip=True)

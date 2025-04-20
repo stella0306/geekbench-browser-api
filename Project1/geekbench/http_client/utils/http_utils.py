@@ -4,12 +4,6 @@ import re
 
     
 def is_last_page(content: str) -> bool:
-    """
-    주어진 HTML 콘텐츠에서 마지막 페이지인지 여부를 확인합니다.
-
-    :param content: HTML 콘텐츠 문자열
-    :return: 마지막 페이지인 경우 True, 아니면 False
-    """
     soup = BeautifulSoup(markup=content, features="lxml")
     
     # 마지막 페이지를 확인하기 위한 정규 표현식 패턴
@@ -20,12 +14,6 @@ def is_last_page(content: str) -> bool:
 
 
 def separate_device_and_cpu(text: str):
-    """
-    주어진 문자열에서 모델 이름과 CPU 이름을 정규 표현식을 사용하여 분리하는 함수입니다.
-
-    :param text: 모델 이름과 CPU 이름이 포함된 문자열
-    :return: 모델 이름과 CPU 이름을 포함하는 튜플 (device_info, cpu_info)
-    """
     # 정규 표현식을 사용하여 전체 문자열에서 모델 이름과 CPU 이름을 추출
     match = re.match(r"(.+?)\n\n(.+)", text.strip(), re.DOTALL)
 
@@ -39,16 +27,6 @@ def separate_device_and_cpu(text: str):
 
 
 def fetch_total_pages_parser(content: str, default_pages: int) -> int:
-    """
-    주어진 HTML 콘텐츠에서 페이지 번호를 추출하고 가장 큰 페이지 번호를 반환합니다.
-
-    Parameters:
-    content (str): HTML 콘텐츠 문자열
-
-    Returns:
-    int: 가장 큰 페이지 번호, 페이지가 없으면 0
-    """
-
     if content is not None:
         # BeautifulSoup 객체 생성
         soup = BeautifulSoup(markup=content, features="lxml")

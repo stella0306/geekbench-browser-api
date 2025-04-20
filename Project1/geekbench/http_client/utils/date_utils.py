@@ -3,20 +3,9 @@ import re
 import numpy as np
 
 def get_current_time() -> datetime:
-    """
-    현재 시간을 반환하는 함수입니다.
-
-    :return: 현재 날짜와 시간을 포함하는 datetime 객체
-    """
     return datetime.now()  # 현재 시간을 반환
 
 def format_datetime(original_datetime: str) -> str:
-    """
-    주어진 문자열 형식의 날짜 및 시간을 알아보기 쉽게 변환합니다.
-
-    :param original_datetime: 변환할 날짜 및 시간 문자열 (예: "2025-02-27 12:16:07.005607")
-    :return: 알아보기 좋은 형식의 날짜 및 시간 문자열
-    """
     # 문자열을 datetime 객체로 변환
     dt = datetime.strptime(str(original_datetime), "%Y-%m-%d %H:%M:%S.%f")
     
@@ -26,12 +15,6 @@ def format_datetime(original_datetime: str) -> str:
     return formatted_datetime
 
 def convert_timedelta_to_dhms(total_seconds: int):
-    """
-    주어진 초를 일, 시간, 분, 초로 변환합니다.
-
-    :param total_seconds: 변환할 총 초
-    :return: (일, 시간, 분, 초) 튜플
-    """
     td = timedelta(seconds=total_seconds)
     days = td.days
     seconds = td.seconds
@@ -52,19 +35,6 @@ def log_progress(
     max_delay: float, 
     avg_delay: float
     ) -> None:
-    """
-    진행 상황을 로그로 출력하는 함수입니다.
-    
-    :param request_mode: 요청 모드
-    :param start_time: 요청 시작 시간
-    :param total_pages: 전체 페이지 수
-    :param current_page: 현재 페이지 번호
-    :param current_last_page: 현재 마지막 페이지 번호
-    :param random_sleep: 현재 요청의 랜덤 지연 시간
-    :param min_delay: 최소 지연 시간
-    :param max_delay: 최대 지연 시간
-    :param avg_delay: 평균 지연 시간 리스트
-    """
     try:
         # 리스트 업데이트
         avg_delay.append(random_sleep)
@@ -117,12 +87,6 @@ def log_progress(
         print(f"{error}: {e}\n")
 
 def parse_date_from_text(date_text: str) -> str:
-    """
-    주어진 텍스트에서 날짜를 추출하고, ISO 형식(YYYY-MM-DD)으로 변환하는 함수입니다.
-
-    :param date_text: 날짜가 포함된 문자열
-    :return: 변환된 날짜 문자열 (형식: YYYY-MM-DD) 또는 None
-    """
     # 날짜 패턴을 사용하여 텍스트에서 날짜 추출
     try:
         # 정규 표현식을 사용하여 날짜 형식 매칭
@@ -142,12 +106,6 @@ def parse_date_from_text(date_text: str) -> str:
 
 
 def extract_date_components(date_text: str) -> dict:
-    """
-    주어진 텍스트에서 날짜를 추출하고, 년도, 월, 일을 개별적으로 반환하는 함수입니다.
-
-    :param date_text: 날짜가 포함된 문자열
-    :return: 년도, 월, 일이 포함된 딕셔너리 또는 None
-    """
     try:
         match = re.search(r'(\b\w{3} \d{1,2}, \d{4}\b)', date_text.strip())
         

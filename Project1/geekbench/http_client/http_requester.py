@@ -36,15 +36,6 @@ class AsyncGeekBenchBrowserAPI:
         headers:dict
         ) -> str:
         
-        """
-        비동기적으로 주어진 URL에 GET 요청을 수행합니다.
-
-        :param session: aiohttp.ClientSession 객체
-        :param url: 요청할 URL
-        :param payload: 요청할 URL의 payload
-        :param headers: 요청할 URL의 headers
-        :return: 응답의 텍스트 내용 (성공 시) 또는 None (오류 시)
-        """
         async with session.get(url, params=payload, headers=headers) as response:
             # 응답 상태 코드 처리
             if response.status == 200:
@@ -66,15 +57,6 @@ class AsyncGeekBenchBrowserAPI:
 
 
     def _get_search_url_and_payload(self, search_type: str, query: str, start_page: int):
-        """
-        검색 카테고리에 따라 URL과 payload를 반환하는 헬퍼 함수입니다.
-
-        :param search_type: 검색 카테고리 ('cpu', 'gpu', 'ai')
-        :param query: 검색할 쿼리 문자열
-        :param start_page: 검색 시작 페이지 번호
-        :return: (url, payload)
-        """
-        
         if search_type == "cpu":
             return self.url_manager.get_cpu_search_url(page=start_page, query=query)
         elif search_type == "gpu":
@@ -86,18 +68,6 @@ class AsyncGeekBenchBrowserAPI:
 
 
     async def fetch_total_pages(self, search_type: str = None, query: str = None, default_pages: int = 0, merge_mode: bool = False, add_pages: int = 5) -> int:
-        """
-        주어진 검색 유형과 쿼리로 총 페이지 수를 가져오는 비동기 함수입니다.
-
-        :param search_type (str): 검색 유형 (예: 'cpu', 'gpu', 'ai' 등)
-        :param query (str): 검색할 쿼리
-        :param default_pages (int): 자동으로 가져와진 페이지 수가 0또는 오류난 경우 사용할 기본 페이지 수
-        :param merge_mode (bool): 데이터 병합 모드 여부 (기본값: False)
-        :param add_pages: 추가 페이지 (페이지 값 보정에 사용되는 매개변수) (기본값: 5, 최소 기본값 또는 이상 값으로 권장)
-
-        :Returns (int) 검색 결과에서 총 페이지 수 (보정된 페이지 수 포함)
-        """
-        
         # URL 및 요청 payload 생성
         url, payload = self._get_search_url_and_payload(search_type=search_type, query=query, start_page=1)
 
@@ -127,18 +97,6 @@ class AsyncGeekBenchBrowserAPI:
 
 
     async def search_client(self, search_type:str, query: str, start_page: int = 1, last_page: int = 1, min_delay: int = 1, max_delay: int = 1):
-        """
-        비동기적으로 검색 요청을 수행하는 제너레이터 함수입니다.
-
-        :param search_type: 검색 카테고리 ('cpu', 'gpu', 'ai')
-        :param query: 검색할 쿼리 문자열
-        :param start_page: 검색 시작 페이지 번호
-        :param last_page: 검색 마지막 페이지 번호
-        :param min_delay: 각 요청 사이의 최소 대기 시간 (초)
-        :param max_delay: 각 요청 사이의 최대 대기 시간 (초)
-        :yield: 검색 결과, 현재 페이지 번호, 현재 마지막 페이지 번호, 랜덤 대기 시간
-        """
-        
         # URL 및 요청 payload 생성
         url, payload = self._get_search_url_and_payload(search_type=search_type, query=query, start_page=start_page)
 

@@ -6,14 +6,6 @@ class HTTPUrl:
 
     @staticmethod
     def _get_search_url(key: str, page: int = 1, query: Optional[str] = None) -> tuple[str, dict[str, str]]:
-        """
-        검색 URL과 페이로드를 반환하는 내부 메서드입니다.
-
-        :param key: 검색 키 (예: 'v6_cpu', 'v6_compute', 'ai')
-        :param page: 페이지 번호
-        :param query: 검색 쿼리
-        :return: 검색 URL과 페이로드
-        """
         payload = {
             "k": key,
             "page": str(page),
@@ -25,17 +17,14 @@ class HTTPUrl:
 
     @staticmethod
     def get_cpu_search_url(page: int = 1, query: Optional[str] = None) -> tuple[str, dict[str, str]]:
-        """CPU 검색 URL과 페이로드를 반환합니다."""
         return HTTPUrl._get_search_url("v6_cpu", page, query)
 
     @staticmethod
     def get_gpu_search_url(page: int = 1, query: Optional[str] = None) -> tuple[str, dict[str, str]]:
-        """GPU 검색 URL과 페이로드를 반환합니다."""
         return HTTPUrl._get_search_url("v6_compute", page, query)
 
     @staticmethod
     def get_ai_search_url(page: int = 1, query: Optional[str] = None) -> tuple[str, dict[str, str]]:
-        """AI 검색 URL과 페이로드를 반환합니다."""
         return HTTPUrl._get_search_url("ai", page, query)
 
 if __name__ == "__main__":
